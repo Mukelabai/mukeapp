@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewmodels="clr-namespace:MukeApp.ViewModels" xmlns:model="clr-namespace:MukeApp.Models"
+             x:Class="MukeApp.Views.MukeCoffeePage"
+             x:DataType="viewmodels:MukeCoffeeViewModel"
+             BackgroundColor="White">
+    <ContentPage.BindingContext>
+        <viewmodels:MukeCoffeeViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>        
+        <StackLayout>
+            <!--
+            <Button x:Name="btnClick" Text="Click Me" Command="{Binding IncreaseCount}" BackgroundColor="Gray"></Button>
+            <Label x:Name="lblText" Text="{Binding CountDisplay}"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <Entry Text="{Binding CountDisplay}" />-->
+            <ListView ItemsSource="{Binding CoffeeGroups}" HasUnevenRows="True" IsGroupingEnabled="True" GroupDisplayBinding="{Binding Key}"
+                      SeparatorColor="Black" SeparatorVisibility="None" IsPullToRefreshEnabled="True"
+                      IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      RefreshControlColor="Red"
+                      CachingStrategy="RecycleElement"
+                      ItemTapped="ListView_ItemTapped"
+                      ItemSelected="ListView_ItemSelected">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Coffee">
+                        <!-- <ImageCell Text="{Binding Name}" Detail="{Binding Roaster}" ImageSource="{Binding Image}"/>-->
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Favourite" Clicked="MenuItem_Clicked"></MenuItem>
+                                <MenuItem Text="Delete" IsDestructive="True" />
+                            </ViewCell.ContextActions>
+                            <Grid Padding="10">
+                                <Frame CornerRadius="20" HasShadow="True">
+                                    <StackLayout Orientation="Horizontal">
+                                        <Image Source="{Binding Image}" WidthRequest="50"/>
+                                        <StackLayout>
+                                        <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="Large"></Label>
+                                        <Label Text="{Binding Roaster}" VerticalOptions="Center" FontSize="Medium"></Label>
+                                    </StackLayout>
+                                    </StackLayout>
+                                </Frame>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.Header>
+                    <StackLayout HorizontalOptions="Center">
+                        <Label Text="My First ListView"></Label>
+                    </StackLayout>
+                </ListView.Header>
+                <ListView.Footer>
+                    <StackLayout HorizontalOptions="Center">
+                        <Button Text="Load More"></Button>
+                    </StackLayout>
+                </ListView.Footer>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
