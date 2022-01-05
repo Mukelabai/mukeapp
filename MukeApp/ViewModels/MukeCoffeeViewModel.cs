@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
+using Xamarin.Forms;
 
 namespace MukeApp.ViewModels
 {
@@ -22,7 +22,7 @@ namespace MukeApp.ViewModels
         public AsyncCommand RefreshCommand { get; }
         public MukeCoffeeViewModel()
         {
-            IncreaseCount = new Command(OnIncrease);
+            
             
             Coffee = new ObservableRangeCollection<Coffee>();
             var image = "https://www.yesplz.coffee/app/uploads/2020/11/emptybag-min.png";
@@ -53,6 +53,7 @@ namespace MukeApp.ViewModels
             //}
 
             RefreshCommand = new AsyncCommand(Refresh);
+            FavouriteCoffeeCommand = new AsyncCommand<Coffee>(Favourite);
             Title = "Muke's Coffee App";
         }
 
@@ -75,7 +76,7 @@ namespace MukeApp.ViewModels
         }
 
         public ICommand IncreaseCount { get; }
-
+        
         void OnIncrease()
         {
             count++;
@@ -91,6 +92,34 @@ namespace MukeApp.ViewModels
             IsBusy = false;
         }
 
-       
+        //MVVM for ListView events
+        //backup coffee
+        Coffee previouslySelectedCoffee;
+        Coffee selectedCoffee;
+
+        public Coffee SelectedCoffee { get => selectedCoffee;
+            set
+            {
+                if (value != null)
+                {
+                    Application.Current.MainPage.DisplayAlert("Selected", value.Name, "OK");
+                    previouslySelectedCoffee = value;
+                    value = null;
+                }
+                selectedCoffee = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AsyncCommand<Coffee> FavouriteCoffeeCommand { get; }
+        public async Task Favourite(Coffee value)
+        {
+            if (value == null)
+            {
+                return;
+            }
+           await Application.Current.MainPage.DisplayAlert("Favourite Coffee", value.Name, "OK");
+        }
+
     }
 }
